@@ -21,7 +21,7 @@ func fetch(cmd *cobra.Command, args []string) {
 	Fetch_openid(args[0])
 }
 
-func Fetch_openid(hostname string) {
+func Fetch_openid(hostname string) []byte {
 	var old_config map[string]any
 	var new_config map[string]any
 
@@ -36,14 +36,14 @@ func Fetch_openid(hostname string) {
 		response, err := http.Get(hostname + "/.well-known/openid-configuration")
 		if err != nil {
 			log.Println(err)
-			return
+			return nil
 		}
 		defer response.Body.Close()
 		log.Println(response.Status)
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
 			log.Println(err)
-			return
+			return nil
 		}
 		if err = json.Unmarshal(body, &new_config); err != nil {
 			log.Println(err)
@@ -54,7 +54,7 @@ func Fetch_openid(hostname string) {
 	} else {
 		log.Println("OpenID configuration exists. Ignoring...")
 	}
-
+	return b
 }
 
 // fetchCmd represents the fetch command
