@@ -4,6 +4,8 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"errors"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -17,6 +19,12 @@ var rootCmd = &cobra.Command{
 Loki is a simple CLI based application for interacting
 with an OAuth 2.0 server. It supports OpenID connect and authorization 
 flows. Written in Go.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := os.ReadFile(config_file)
+		if errors.Is(err, os.ErrNotExist) {
+			log.Println("Configuration file not found, please run \"loki setup\".")
+		}
+	},
 }
 
 func Execute() {
