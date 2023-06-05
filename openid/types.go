@@ -1,15 +1,16 @@
 package openid
 
 type Configuration struct {
-	Hostname     string
-	ClientId     string
-	ClientSecret string
-	OpenID       OIDCServer
+	Client_id     string
+	Client_secret string
+	OpenID        OIDCServer
 }
 
 type OIDCServer struct {
+	Hostname               string
 	Authorization_endpoint string
 	Token_endpoint         string
+	Registration_endpoint  string
 }
 
 type AccessToken struct {

@@ -2,19 +2,24 @@ package openid
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 )
 
-func Fetch_openid(hostname string) (*OIDCServer, error) {
+func Fetch_openid(hostname string, disable_ssl bool) (*OIDCServer, error) {
 	var oidc OIDCServer
-	resp, err := http.Get(hostname + "/.well-known/openid-configuration")
+	request, err := http.NewRequest("GET", hostname+"/.well-known/openid-configuration", nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := Request(disable_ssl, request)
 	if err != nil {
 		return nil, err
 	} else {
-		defer resp.Body.Close()
-		body, _ := io.ReadAll(resp.Body)
-		json.Unmarshal(body, &oidc)
+		err = json.Unmarshal(resp, &oidc)
+		if err != nil {
+			return nil, err
+		}
 	}
+	oidc.Hostname = hostname
 	return &oidc, nil
 }

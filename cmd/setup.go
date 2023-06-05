@@ -34,7 +34,7 @@ func init() {
 				return nil
 			}
 		}
-		oidc, err := openid.Fetch_openid(new_config.Hostname)
+		oidc, err := openid.Fetch_openid(new_config.OpenID.Hostname, disable_ssl)
 		if err != nil {
 			return err
 		}
@@ -59,9 +59,9 @@ This command must be run before authentication attempt can be made,`,
 	}
 	filename := pwd + string(os.PathSeparator) + ".config.json"
 	setupCmd.PersistentFlags().StringVar(&config_file, "config", filename, "Location of configuration file")
-	setupCmd.Flags().StringVar(&new_config.Hostname, "hostname", "http://127.0.0.1", "Hostname of OpenID Provider")
-	setupCmd.Flags().StringVar(&new_config.ClientId, "client-id", "", "Client ID")
-	setupCmd.Flags().StringVar(&new_config.ClientSecret, "client-secret", "", "Client Secret")
+	setupCmd.Flags().StringVar(&new_config.OpenID.Hostname, "hostname", "http://127.0.0.1", "Hostname of OpenID Provider")
+	setupCmd.Flags().StringVar(&new_config.Client_id, "client-id", "", "Client ID")
+	setupCmd.Flags().StringVar(&new_config.Client_secret, "client-secret", "", "Client Secret")
 	setupCmd.Flags().StringVar(&alias, "alias", "", "Alias for configuration")
 	setupCmd.MarkFlagRequired("client-id")
 	setupCmd.MarkFlagRequired("client-secret")

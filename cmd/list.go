@@ -26,7 +26,7 @@ func init() {
 		}
 		i := 1
 		for _, entry := range new_config_map {
-			fmt.Printf("%d: %v, %v\n", i, entry.Hostname, entry.ClientId)
+			fmt.Printf("%d: %v, %v\n", i, entry.OpenID.Hostname, entry.Client_id)
 			i += 1
 		}
 		return nil
