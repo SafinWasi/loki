@@ -6,6 +6,7 @@ package cmd
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -15,23 +16,16 @@ import (
 
 var config_file string
 
-type Configuration struct {
-	Hostname     string
-	ClientId     string
-	ClientSecret string
-	OpenID       openid.OIDCServer
-}
-
 func init() {
-	var new_config Configuration
-	var new_config_map map[string]Configuration
+	var new_config openid.Configuration
+	var new_config_map map[string]openid.Configuration
 	var alias string
 	var new_bytes []byte
 
 	setupFunc := func(cmd *cobra.Command, args []string) error {
 		old_bytes, err := os.ReadFile(config_file)
 		if errors.Is(err, os.ErrNotExist) {
-			new_config_map = make(map[string]Configuration)
+			new_config_map = make(map[string]openid.Configuration)
 		} else {
 			json.Unmarshal(old_bytes, &new_config_map)
 			_, exists := new_config_map[alias]
@@ -48,7 +42,7 @@ func init() {
 		new_config_map[alias] = new_config
 		new_bytes, _ = json.MarshalIndent(new_config_map, "", "\t")
 		os.WriteFile(config_file, new_bytes, 0644)
-		log.Println("Setup successful")
+		fmt.Println("Setup successful")
 		return nil
 	}
 	var setupCmd = &cobra.Command{

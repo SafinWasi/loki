@@ -6,11 +6,6 @@ import (
 	"net/http"
 )
 
-type OIDCServer struct {
-	Authorization_endpoint string
-	Token_endpoint         string
-}
-
 func Fetch_openid(hostname string) (*OIDCServer, error) {
 	var oidc OIDCServer
 	resp, err := http.Get(hostname + "/.well-known/openid-configuration")
