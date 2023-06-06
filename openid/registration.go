@@ -10,10 +10,11 @@ import (
 func Register(hostname string, ssa string, disable_ssl bool) (*Configuration, error) {
 	fmt.Println("Starting client registration request")
 	values := make(map[string]any)
-	values["redirect_uris"] = []string{"https://localhost:8080/callback"}
+	values["redirect_uris"] = []string{"http://localhost:8080/callback"}
 	values["scope"] = []string{"openid", "profile"}
 	values["grant_types"] = []string{"authorization_code", "client_credentials"}
 	values["response_types"] = []string{"code", "token"}
+	values["client_name"] = "loki_client"
 	body_bytes, err := json.MarshalIndent(values, "", "\t")
 	if err != nil {
 		return nil, err
