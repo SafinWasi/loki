@@ -15,6 +15,10 @@ func Register(hostname string, ssa string, disable_ssl bool) (*Configuration, er
 	values["grant_types"] = []string{"authorization_code", "client_credentials"}
 	values["response_types"] = []string{"code", "token"}
 	values["client_name"] = "loki_client"
+	if ssa != "" {
+		values["software_statement"] = ssa
+		values["redirect_uris"] = []string{hostname}
+	}
 	body_bytes, err := json.MarshalIndent(values, "", "\t")
 	if err != nil {
 		return nil, err
