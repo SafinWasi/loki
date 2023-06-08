@@ -57,7 +57,7 @@ flows. Written in Go.`,
 				log.Println("Alias missing, please run \"loki setup\".")
 				os.Exit(1)
 			}
-			at, err := openid.Authenticate(flow, config, disable_ssl)
+			at, err := openid.Authenticate(flow, config)
 			if err != nil {
 				log.Println("Authentication failed:", err)
 				os.Exit(1)

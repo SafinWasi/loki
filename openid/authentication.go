@@ -12,13 +12,19 @@ import (
 	"net/url"
 )
 
-func Authenticate(flow string, config Configuration, disable_ssl bool) (string, error) {
+func Authenticate(flow string, config Configuration) (string, error) {
 	switch flow {
 	case "code":
-		at, err := code(config, disable_ssl)
+		at, err := code(config)
+		if err != nil {
+			return "", err
+		}
 		return at.Access_token, err
 	case "client":
-		at, err := token(config, "", "client_credentials", disable_ssl)
+		at, err := token(config, "", "client_credentials")
+		if err != nil {
+			return "", err
+		}
 		return at.Access_token, err
 	default:
 		return "", errors.New("unknown grant type")
@@ -29,7 +35,7 @@ func test(abcdef string) {
 	return
 }
 
-func code(config Configuration, disable_ssl bool) (*AccessToken, error) {
+func code(config Configuration) (*AccessToken, error) {
 	// Credits to https://medium.com/@int128/shutdown-http-server-by-endpoint-in-go-2a0e2d7f9b8c
 	authorization_uri := config.OpenID.Authorization_endpoint
 	data := url.Values{}
@@ -55,11 +61,11 @@ func code(config Configuration, disable_ssl bool) (*AccessToken, error) {
 	// Post process after shutdown here
 	s.Shutdown(context.Background())
 	log.Printf("Got code=%s", code)
-	return token(config, code, "authorization_code", disable_ssl)
+	return token(config, code, "authorization_code")
 }
 
-func token(config Configuration, code string, grant_type string, disable_ssl bool) (*AccessToken, error) {
-	fmt.Println("Starting client credentials request")
+func token(config Configuration, code string, grant_type string) (*AccessToken, error) {
+	fmt.Println("Starting token request")
 	data := url.Values{}
 	data.Set("grant_type", grant_type)
 	data.Set("scope", "openid")
@@ -75,7 +81,7 @@ func token(config Configuration, code string, grant_type string, disable_ssl boo
 	encoded_client_creds := base64.RawURLEncoding.EncodeToString(client_creds)
 	req.Header.Add("Authorization", "Basic "+encoded_client_creds)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	response, err := Request(disable_ssl, req)
+	response, err := Request(req)
 	if err != nil {
 		return nil, err
 	}

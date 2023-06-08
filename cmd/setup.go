@@ -34,7 +34,7 @@ func init() {
 				return nil
 			}
 		}
-		oidc, err := openid.Fetch_openid(new_config.OpenID.Hostname, disable_ssl)
+		oidc, err := openid.Fetch_openid(new_config.OpenID.Hostname)
 		if err != nil {
 			return err
 		}

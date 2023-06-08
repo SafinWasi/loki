@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func Register(hostname string, ssa string, disable_ssl bool) (*Configuration, error) {
+func Register(hostname string, ssa string) (*Configuration, error) {
 	fmt.Println("Starting client registration request")
 	values := make(map[string]any)
 	values["redirect_uris"] = []string{"http://localhost:8080/callback"}
@@ -23,7 +23,7 @@ func Register(hostname string, ssa string, disable_ssl bool) (*Configuration, er
 	if err != nil {
 		return nil, err
 	}
-	oidc, err := Fetch_openid(hostname, disable_ssl)
+	oidc, err := Fetch_openid(hostname)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func Register(hostname string, ssa string, disable_ssl bool) (*Configuration, er
 	if err != nil {
 		return nil, err
 	}
-	response, err := Request(disable_ssl, request)
+	response, err := Request(request)
 	if err != nil {
 		return nil, err
 	}

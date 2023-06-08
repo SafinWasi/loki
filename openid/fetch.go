@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-func Fetch_openid(hostname string, disable_ssl bool) (*OIDCServer, error) {
+func Fetch_openid(hostname string) (*OIDCServer, error) {
 	var oidc OIDCServer
 	request, err := http.NewRequest("GET", hostname+"/.well-known/openid-configuration", nil)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := Request(disable_ssl, request)
+	resp, err := Request(request)
 	if err != nil {
 		return nil, err
 	} else {

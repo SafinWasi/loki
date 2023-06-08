@@ -40,7 +40,7 @@ func init() {
 		if err != nil {
 			return err
 		}
-		oidc, err := openid.Register(hostname, ssa, disable_ssl)
+		oidc, err := openid.Register(hostname, ssa)
 		if err != nil {
 			log.Println("Failed to register client: ", err)
 			return err
