@@ -1,11 +1,21 @@
 name: Go
-on: [push]
-
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 jobs:
+  name: Build executables
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        os: ["windows", "linux"]
     steps:
+      - name: Checkout
       - uses: actions/checkout@v3
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -14,4 +24,8 @@ jobs:
       - name: Install dependencies
         run: go get .
       - name: Build
-        run: go build -v ./...
+        run: GOOS={{ matrix.os }} go build -v ./...
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: loki*
