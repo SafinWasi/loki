@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: go get .
       - name: Build
-        run: GOOS={{ matrix.os }} go build -v ./...
+        run: GOOS=${{ matrix.os }} go build -v ./...
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
