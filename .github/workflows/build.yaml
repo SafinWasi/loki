@@ -8,8 +8,8 @@ on:
     branches:
       - master
 jobs:
-  name: Build executables
   build:
+    name: Build packages
     runs-on: ubuntu-latest
     strategy:
       matrix:
