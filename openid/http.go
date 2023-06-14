@@ -6,7 +6,11 @@ import (
 	"net/http"
 )
 
-var Client *http.Client
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+var Client HTTPClient
 
 func Request(request *http.Request) ([]byte, error) {
 	response, err := Client.Do(request)
