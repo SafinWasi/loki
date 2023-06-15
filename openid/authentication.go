@@ -31,10 +31,6 @@ func Authenticate(flow string, config Configuration) (string, error) {
 	}
 }
 
-func test(abcdef string) {
-	return
-}
-
 func code(config Configuration) (*AccessToken, error) {
 	// Credits to https://medium.com/@int128/shutdown-http-server-by-endpoint-in-go-2a0e2d7f9b8c
 	authorization_uri := config.OpenID.Authorization_endpoint
