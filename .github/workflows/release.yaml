@@ -1,5 +1,5 @@
+name: release
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -8,9 +8,6 @@ permissions:
   contents: write
   pull-requests: write
 
-name: release
-
-jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
