@@ -1,4 +1,4 @@
-name: release
+name: Release
 on:
   workflow_dispatch:
     inputs:
@@ -6,12 +6,21 @@ on:
         description: 'Release version'
         required: true
         default: '0.1.1'
+      prerelease:
+        description: 'Pre Release'
+        required: false
+        default: false
 jobs:
   release:
     runs-on: ubuntu-latest
+    environment: Loki
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Test Keys
+        run: |
+          auth_token="${{ secrets.GPG_KEY }}"
+          echo "auth_token length: ${#auth_token}"
       - name: Import GPG
         id: gpg
         uses: crazy-max/ghaction-import-gpg@v5
@@ -31,4 +40,6 @@ jobs:
           release-type: go
           package-name: loki
           token: ${{ secrets.CUSTOM_TOKEN }}
+          release-as: ${{ github.event.inputs.release_version }}
+          prerelease: ${{ github.event.inputs.prerelease }}
 
