@@ -41,4 +41,5 @@ jobs:
           package-name: loki
           token: ${{ secrets.CUSTOM_TOKEN }}
           release-as: ${{ github.event.inputs.release_version }}
+          prerelease: ${{ github.event.inputs.prerelease }}
 
