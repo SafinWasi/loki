@@ -29,6 +29,7 @@ func Execute() {
 func rootGenerator() *cobra.Command {
 	var flow string
 	var alias string
+	var custom_file string
 	var rootCmd = &cobra.Command{
 		Use:   "loki [command] [flags]",
 		Short: "A simple CLI based OAuth RP",
@@ -67,6 +68,7 @@ flows. Written in Go.`,
 	}
 	rootCmd.Flags().StringVarP(&flow, "flow", "f", "", "Flow to be used for authentication")
 	rootCmd.Flags().StringVarP(&alias, "alias", "a", "", "Flow to be used for authentication")
+	rootCmd.Flags().StringVarP(&custom_file, "custom-params", "c", "", "File containing custom parameters in JSON")
 	rootCmd.PersistentFlags().BoolVar(&disable_ssl, "disable-ssl", false, "Disables SSL")
 	rootCmd.MarkFlagRequired("alias")
 	rootCmd.MarkFlagRequired("flow")

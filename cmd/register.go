@@ -16,6 +16,7 @@ func init() {
 	var alias string
 	var hostname string
 	var ssa_file string
+	var payload_file string
 
 	registerFunc := func(cmd *cobra.Command, args []string) error {
 		_, exists := new_config_map[alias]
@@ -40,7 +41,7 @@ func init() {
 		if err != nil {
 			return err
 		}
-		oidc, err := openid.Register(hostname, ssa)
+		oidc, err := openid.Register(hostname, ssa, payload_file)
 		if err != nil {
 			log.Println("Failed to register client: ", err)
 			return err
@@ -55,13 +56,15 @@ func init() {
 		Use:   "register",
 		Short: "Registers a new OpenID Client",
 		Long: `
-Lists the hostname and Client ID of aliases configured,`,
+Registers a new OpenID client. If a data file is not provided, the default values at
+examples/registration-example.json will be used.`,
 		RunE: registerFunc,
 	}
 	rootCmd.AddCommand(registerCmd)
 	registerCmd.Flags().StringVar(&hostname, "hostname", "", "Hostname of the server")
 	registerCmd.Flags().StringVarP(&alias, "alias", "a", "", "Alias of the new client")
 	registerCmd.Flags().StringVarP(&ssa_file, "ssa-file", "s", "", "File containing software statement")
+	registerCmd.Flags().StringVarP(&payload_file, "data-file", "d", "", "File containing client information (see examples/registration-example.json)")
 	registerCmd.MarkFlagRequired("hostname")
 	registerCmd.MarkFlagRequired("alias")
 }
