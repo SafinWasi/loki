@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/SafinWasi/loki/compare/v0.1.0...v0.1.1) (2023-06-20)
+
+
+### Features
+
+* add tests ([929dcc6](https://github.com/SafinWasi/loki/commit/929dcc6827fd6a00bf30a306f426710359956c85))
+
 ## [0.1.0](https://github.com/SafinWasi/loki/compare/0.0.1...v0.1.0) (2023-06-15)
 
 
