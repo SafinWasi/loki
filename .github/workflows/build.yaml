@@ -9,8 +9,13 @@ jobs:
     strategy:
       matrix:
         os: ["windows", "linux"]
-        package_name: ["loki.exe", "loki"]
+        include:
+          - os: windows
+            filename: loki-windows.exe
+          - os: linux
+            filename: loki-linux
     runs-on: ubuntu-latest
+    environment: Loki
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,13 +26,13 @@ jobs:
       - name: Install dependencies
         run: go get .
       - name: Build
-        run: GOOS=${{ matrix.os }} go build
+        run: GOOS=${{ matrix.os }} go build -o ${{ matrix.filename }}
       - name: Upload packages
         uses: svenstaro/upload-release-action@v2
         with: 
           repo_token: ${{ secrets.GH_TOKEN }}
           overwrite: true
-          file: ${{ github.workspace }}/${{ matrix.package_name }}
+          file: ${{ github.workspace }}/${{ matrix.filename }}
           tag: ${{ github.ref }}
-          asset_name: ${{ matrix.package_name }}
+          asset_name: ${{ matrix.filename }}
 
