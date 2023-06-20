@@ -1,4 +1,4 @@
-name: release
+name: Release
 on:
   workflow_dispatch:
     inputs:
@@ -6,6 +6,10 @@ on:
         description: 'Release version'
         required: true
         default: '0.1.1'
+      prerelease:
+        description: 'Pre Release'
+        required: false
+        default: false
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -36,4 +40,5 @@ jobs:
           release-type: go
           package-name: loki
           token: ${{ secrets.CUSTOM_TOKEN }}
+          release-as: ${{ github.event.inputs.release_version }}
 
