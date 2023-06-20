@@ -5,19 +5,31 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
-func Register(hostname string, ssa string) (*Configuration, error) {
+func Register(hostname string, ssa string, payload_file string) (*Configuration, error) {
 	fmt.Println("Starting client registration request")
-	values := make(map[string]any)
-	values["redirect_uris"] = []string{"http://localhost:8080/callback"}
-	values["scope"] = []string{"openid", "profile"}
-	values["grant_types"] = []string{"authorization_code", "client_credentials"}
-	values["response_types"] = []string{"code", "token"}
-	values["client_name"] = "loki_client"
-	if ssa != "" {
-		values["software_statement"] = ssa
-		values["redirect_uris"] = []string{hostname}
+	var values = RegistrationPayload{}
+	if payload_file == "" {
+		values.redirect_uris = []string{"http://localhost:8080/callback"}
+		values.scope = []string{"openid", "profile"}
+		values.grant_types = []string{"authorization_code", "client_credentials"}
+		values.response_types = []string{"code", "token"}
+		values.client_name = "loki_client"
+		if ssa != "" {
+			values.ssa = ssa
+			values.redirect_uris = []string{hostname}
+		}
+	} else {
+		b, err := os.ReadFile(payload_file)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal(b, &values)
+		if err != nil {
+			return nil, err
+		}
 	}
 	body_bytes, err := json.MarshalIndent(values, "", "\t")
 	if err != nil {

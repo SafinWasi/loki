@@ -35,7 +35,7 @@ func TestRegistration(t *testing.T) {
 		body := io.NopCloser(bytes.NewReader([]byte(openid_json)))
 		return &http.Response{StatusCode: 200, Body: body}, nil
 	}
-	config, err := Register(hostName, ssa)
+	config, err := Register(hostName, ssa, "")
 	assert.Equal(t, err, nil, "error should be nil")
 	assert.Equal(t, config.Client_id, "abc", "mismatch in client ID")
 	assert.Equal(t, config.Client_secret, "def", "mismatch in client secret")
