@@ -30,6 +30,9 @@ func init() {
 			return err
 		}
 		err = os.WriteFile(config_file, b, 0644)
+		if err == nil {
+			log.Printf("Delete %v successful", alias)
+		}
 		return err
 	}
 	var deleteCmd = &cobra.Command{

@@ -24,10 +24,8 @@ func init() {
 		if err != nil {
 			return err
 		}
-		i := 1
-		for _, entry := range new_config_map {
-			fmt.Printf("%d: %v, %v\n", i, entry.OpenID.Hostname, entry.Client_id)
-			i += 1
+		for name, entry := range new_config_map {
+			fmt.Printf("%v: %v, %v\n", name, entry.OpenID.Hostname, entry.Client_id)
 		}
 		return nil
 	}

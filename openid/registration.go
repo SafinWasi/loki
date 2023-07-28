@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 )
@@ -12,21 +13,23 @@ func Register(hostname string, ssa string, payload_file string) (*Configuration,
 	fmt.Println("Starting client registration request")
 	var values = RegistrationPayload{}
 	if payload_file == "" {
-		values.redirect_uris = []string{"http://localhost:8080/callback"}
-		values.scope = []string{"openid", "profile"}
-		values.grant_types = []string{"authorization_code", "client_credentials"}
-		values.response_types = []string{"code", "token"}
-		values.client_name = "loki_client"
+		values.Redirect_uris = []string{"http://localhost:8080/callback"}
+		values.Scope = []string{"openid", "profile"}
+		values.Grant_types = []string{"authorization_code", "client_credentials"}
+		values.Response_types = []string{"code", "token"}
+		values.Client_name = "loki_client"
 		if ssa != "" {
-			values.ssa = ssa
-			values.redirect_uris = []string{hostname}
+			values.Ssa = ssa
+			values.Redirect_uris = []string{hostname}
 		}
 	} else {
 		b, err := os.ReadFile(payload_file)
+		log.Println(b)
 		if err != nil {
 			return nil, err
 		}
 		err = json.Unmarshal(b, &values)
+		log.Println(values)
 		if err != nil {
 			return nil, err
 		}
