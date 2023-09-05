@@ -30,6 +30,9 @@ func init() {
 			return err
 		}
 		err = os.WriteFile(config_file, b, 0644)
+		if err == nil {
+			log.Printf("Delete %v successful", alias)
+		}
 		return err
 	}
 	var deleteCmd = &cobra.Command{
@@ -41,5 +44,5 @@ Deletes the configuration by the provided alias`,
 	}
 	rootCmd.AddCommand(deleteCmd)
 	deleteCmd.Flags().StringVarP(&alias, "alias", "a", "", "alias of configuration to delete")
-
+	deleteCmd.MarkFlagRequired("alias")
 }
