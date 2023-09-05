@@ -44,5 +44,5 @@ Deletes the configuration by the provided alias`,
 	}
 	rootCmd.AddCommand(deleteCmd)
 	deleteCmd.Flags().StringVarP(&alias, "alias", "a", "", "alias of configuration to delete")
-
+	deleteCmd.MarkFlagRequired("alias")
 }

@@ -4,7 +4,7 @@ type Configuration struct {
 	Client_id     string     `json:"client_id"`
 	Client_secret string     `json:"client_secret"`
 	Acr_values    []string   `json:"acr_values"`
-	OpenID        OIDCServer `json:"open_id"`
+	OpenID        OIDCServer `json:"openid"`
 }
 
 type OIDCServer struct {
@@ -27,6 +27,6 @@ type RegistrationPayload struct {
 	Grant_types    []string `json:"grant_types"`
 	Response_types []string `json:"response_types"`
 	Client_name    string   `json:"client_name"`
-	Ssa            string   `json:"ssa"`
+	Ssa            string   `json:"software_statement"`
 	Acr_values     []string `json:"acr_values"`
 }

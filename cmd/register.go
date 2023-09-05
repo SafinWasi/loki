@@ -19,6 +19,15 @@ func init() {
 	var payload_file string
 
 	registerFunc := func(cmd *cobra.Command, args []string) error {
+		b, err := os.ReadFile(config_file)
+		err = json.Unmarshal(b, &new_config_map)
+		if err != nil {
+			return err
+		}
+		if errors.Is(err, os.ErrNotExist) {
+			log.Println("Configuration file not found, please run \"loki setup\".")
+			return err
+		}
 		_, exists := new_config_map[alias]
 		if exists {
 			log.Println("Alias exists. Skipping...")
@@ -31,15 +40,6 @@ func init() {
 				return err
 			}
 			ssa = string(b)
-		}
-		b, err := os.ReadFile(config_file)
-		if errors.Is(err, os.ErrNotExist) {
-			log.Println("Configuration file not found, please run \"loki setup\".")
-			return err
-		}
-		err = json.Unmarshal(b, &new_config_map)
-		if err != nil {
-			return err
 		}
 		oidc, err := openid.Register(hostname, ssa, payload_file)
 		if err != nil {
