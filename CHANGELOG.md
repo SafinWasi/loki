@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.2](https://github.com/SafinWasi/loki/compare/v0.1.2...v0.1.2) (2023-09-05)
+
+
+### Features
+
+* add custom registration payload ([6d9bc8c](https://github.com/SafinWasi/loki/commit/6d9bc8c8ce3be4c547445430190ca1159f95566a))
+
+
+### Bug Fixes
+
+* add workflow dispatch for build ([ce76d0f](https://github.com/SafinWasi/loki/commit/ce76d0f6544cc808eb58127e5ec66e5db8d3b8c4))
+* fix json parsing ([e2d3ed9](https://github.com/SafinWasi/loki/commit/e2d3ed98fecf64a7a1d3efc3fb46562a6b3159dd))
+* some bugs ([ca43eff](https://github.com/SafinWasi/loki/commit/ca43eff624d3c4a46c1f6c0b9d3d3b3e56fd36ea))
+
 ## [0.1.2](https://github.com/SafinWasi/loki/compare/v0.1.1...v0.1.2) (2023-06-20)
 
 
