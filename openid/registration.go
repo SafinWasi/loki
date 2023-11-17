@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 )
@@ -18,21 +17,20 @@ func Register(hostname string, ssa string, payload_file string) (*Configuration,
 		values.Grant_types = []string{"authorization_code", "client_credentials"}
 		values.Response_types = []string{"code", "token"}
 		values.Client_name = "loki_client"
-		if ssa != "" {
-			values.Ssa = ssa
-			values.Redirect_uris = []string{hostname}
-		}
+		values.Lifetime = 3600
 	} else {
 		b, err := os.ReadFile(payload_file)
-		log.Println(b)
 		if err != nil {
 			return nil, err
 		}
 		err = json.Unmarshal(b, &values)
-		log.Println(values)
 		if err != nil {
 			return nil, err
 		}
+	}
+	if ssa != "" {
+		values.Ssa = ssa
+		values.Redirect_uris = []string{hostname}
 	}
 	body_bytes, err := json.MarshalIndent(values, "", "\t")
 	if err != nil {

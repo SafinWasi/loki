@@ -29,4 +29,5 @@ type RegistrationPayload struct {
 	Client_name    string   `json:"client_name"`
 	Ssa            string   `json:"software_statement"`
 	Acr_values     []string `json:"acr_values"`
+	Lifetime       int      `json:"lifetime"`
 }
