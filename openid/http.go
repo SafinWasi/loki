@@ -23,6 +23,9 @@ func Request(request *http.Request) ([]byte, error) {
 		return nil, err
 	}
 	log.Printf("Request to %v, status %v", request.URL, response.Status)
+	if response.StatusCode >= 400 {
+		log.Fatal("Error in request")
+	}
 	return response_bytes, err
 }
 
