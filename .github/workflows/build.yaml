@@ -4,17 +4,9 @@ on:
   pull_request:
     branches:
       - master 
-    paths:
-      - 'cmd/**'
-      - 'openid/**'
-      - 'main.go'
   push:
     branches:
       - master
-    paths:
-      - 'cmd/**'
-      - 'openid/**'
-      - 'main.go'
 jobs:
   build:
     name: Build binaries
