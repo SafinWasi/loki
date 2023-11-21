@@ -34,11 +34,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: loki-windows
-          path: ./
+          path: ./loki-windows
       - name: Upload Linux build
         uses: actions/upload-artifact@v3
         with:
           name: loki-linux
-          path: ./
+          path: ./loki-linux
 
 # vim: set ts=2 sts=2 sw=2 et
