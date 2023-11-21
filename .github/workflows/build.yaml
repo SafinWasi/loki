@@ -11,6 +11,7 @@ jobs:
   build:
     name: Build binaries
     continue-on-error: true
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         platforms: ["windows", "linux"]
