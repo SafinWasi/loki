@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{{define "registration"}}
+<html>
+    <script type="text/javascript" src="static/htmx.min.js"></script>
+    <h1>Registration</h1>
+    <form hx-post="/registration">
+        <input type="text" placeholder="OpenID Provider" name="host" value=""><br>
+        <input type="text" placeholder="SSA" name="SSA" value=""><br>
+        <input type="text" placeholder="Space separated scopes" name="scope" value="openid"><br>
+        <input type="submit" value="Submit">
+    </form>
+</html>
+{{end}}
