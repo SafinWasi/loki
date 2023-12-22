@@ -1,6 +1,4 @@
-.config.json
-registration.json
 loki
-!/.gitignore
 coverage.out
 build/
+.credentials/

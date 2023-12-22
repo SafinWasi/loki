@@ -1,16 +1,17 @@
-<!DOCTYPE HTML>
 {{define "home"}}
+<!DOCTYPE html>
 <html>
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="static/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     </head>
     <script type="text/javascript" src="static/htmx.min.js"></script>
     <h1>Loki</h1>
     <p> Currently configured OpenID providers:</p>
     <ul>
-        <li>{{range .}}{{.}}<a href="/client/{{.}}">[Details]</a> <a href="/delete/{{.}}">[Delete]</a> {{end}}</li>
+        {{range .}}
+        <li>{{.}} <a href="/client/{{.}}">[Details]</a> <a href="/delete/{{.}}">[Delete]</a></li>
+        {{end}}
     </ul>
     <a href="/registration">Registration</a><br>
     <a href="/code">Code Flow</a><br>

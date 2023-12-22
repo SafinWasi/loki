@@ -96,10 +96,19 @@ func registrationHandler() http.HandlerFunc {
 		if r.Method == http.MethodPost {
 			r.ParseForm()
 			host := r.FormValue("host")
-			ssa := r.FormValue("SSA")
-			scope := r.FormValue("scope")
-			_ = scope
-			newClient, err := openid.Register(host, ssa, "")
+			payload := r.FormValue("payload")
+			if payload == "" {
+				var test openid.RegistrationPayload
+				test.Ssa = r.FormValue("ssa")
+				test.Client_name = r.FormValue("client_name")
+				b, err := json.Marshal(test)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				payload = string(b)
+			}
+			newClient, err := openid.Register(host, "")
 			if err != nil {
 				log.Println(err)
 				http.Error(w, "Something went wrong", http.StatusInternalServerError)
