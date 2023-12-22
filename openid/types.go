@@ -27,7 +27,7 @@ type RegistrationPayload struct {
 	Grant_types    []string `json:"grant_types"`
 	Response_types []string `json:"response_types"`
 	Client_name    string   `json:"client_name"`
-	Ssa            string   `json:"software_statement"`
+	Ssa            string   `json:"software_statement,omitempty"`
 	Acr_values     []string `json:"acr_values"`
 	Lifetime       int      `json:"lifetime"`
 }

@@ -2,16 +2,21 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 
+	"github.com/99designs/keyring"
 	"github.com/safinwasi/loki/openid"
 	"github.com/safinwasi/loki/secrets"
 )
 
 var tp = ParseTemplates()
+var currentOP openid.Configuration
 
 func ParseTemplates() *template.Template {
 	return template.Must(template.ParseGlob("web/*.html"))
@@ -19,16 +24,23 @@ func ParseTemplates() *template.Template {
 func Start(port int) {
 	mux := http.NewServeMux()
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
-	keys, _ := secrets.GetKeys()
-	mux.Handle("/", homeHandler(keys))
-	mux.Handle("/registration", registrationHandler(nil))
+	mux.Handle("/", homeHandler())
+	mux.Handle("/registration", registrationHandler())
+	mux.Handle("/delete/", deleteHandler())
+	mux.Handle("/client/", clientHandler())
+	mux.Handle("/callback", callBackFunc())
 	fmt.Printf("Starting Loki on http://127.0.0.1:%d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), mux))
 }
 
-func homeHandler(data any) http.HandlerFunc {
+func homeHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := tp.ExecuteTemplate(w, "home", data)
+		keys, err := secrets.GetKeys()
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		}
+		err = tp.ExecuteTemplate(w, "home", keys)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
@@ -36,7 +48,50 @@ func homeHandler(data any) http.HandlerFunc {
 	}
 }
 
-func registrationHandler(data any) http.HandlerFunc {
+func clientHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := strings.TrimPrefix(r.URL.Path, "/client/")
+		val, err := secrets.Get(id)
+		if err != nil {
+			log.Println(err)
+			if errors.Is(err, keyring.ErrKeyNotFound) {
+				http.Error(w, fmt.Sprintf("%s not found", id), http.StatusNotFound)
+				return
+			} else {
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+		}
+		w.Write(val)
+	}
+}
+
+func deleteHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := strings.TrimPrefix(r.URL.Path, "/delete/")
+		_, err := secrets.Get(id)
+		if err != nil {
+			log.Println(err)
+			if errors.Is(err, keyring.ErrKeyNotFound) {
+				http.Error(w, fmt.Sprintf("%s not found", id), http.StatusNotFound)
+				return
+			} else {
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+		}
+		err = secrets.RemoveKey(id)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+		log.Printf("Successfully removed %s\n", id)
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func registrationHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			r.ParseForm()
@@ -56,14 +111,33 @@ func registrationHandler(data any) http.HandlerFunc {
 				http.Error(w, "Something went wrong", http.StatusInternalServerError)
 				return
 			}
-			secrets.Set(host, clientBytes)
+			hostName, err := url.Parse(host)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+			secrets.Set(hostName.Host, clientBytes)
+			w.Write([]byte("<p>Successfully registered</p>"))
 		} else {
-			err := tp.ExecuteTemplate(w, "registration", data)
+			err := tp.ExecuteTemplate(w, "registration", nil)
 			if err != nil {
 				log.Println(err)
 				http.Error(w, "Something went wrong", http.StatusInternalServerError)
 				return
 			}
 		}
+	}
+}
+
+func codeFlow() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
+func callBackFunc() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.URL.Query())
 	}
 }

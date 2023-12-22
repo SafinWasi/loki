@@ -26,7 +26,7 @@ func Initialize(debug bool) error {
 		keyring.Config{
 			AllowedBackends:  []keyring.BackendType{keyring.FileBackend},
 			ServiceName:      "loki",
-			FilePasswordFunc: keyring.TerminalPrompt,
+			FilePasswordFunc: keyring.FixedStringPrompt("abdcef"),
 			FileDir:          credsDir})
 	return err
 }
@@ -45,4 +45,8 @@ func Get(key string) ([]byte, error) {
 
 func GetKeys() ([]string, error) {
 	return kr.Keys()
+}
+
+func RemoveKey(key string) error {
+	return kr.Remove(key)
 }
