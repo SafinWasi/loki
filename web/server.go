@@ -62,7 +62,12 @@ func clientHandler() http.HandlerFunc {
 				return
 			}
 		}
-		w.Write(val)
+		err = tp.ExecuteTemplate(w, "client", string(val))
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
