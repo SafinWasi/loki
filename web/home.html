@@ -10,7 +10,7 @@
     <p> Currently configured OpenID providers:</p>
     <ul>
         {{range .}}
-        <li>{{.}} <a href="/client/{{.}}">[Details]</a> <a href="/delete/{{.}}">[Delete]</a></li>
+        <li>{{.}} <a href="/client/{{.}}">[Details]</a> <a href="/delete/{{.}}">[Delete]</a> <a href="/code/{{.}}">[Code Flow]</a> </li>
         {{end}}
     </ul>
     <a href="/registration">Registration</a><br>
