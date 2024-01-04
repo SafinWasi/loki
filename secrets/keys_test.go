@@ -11,7 +11,7 @@ func TestCreateKeyring(t *testing.T) {
 		t.Error("Failed to initialize keyring")
 	}
 	t.Cleanup(func() {
-		removeKeyring()
+		RemoveKeyring()
 	})
 }
 
@@ -28,7 +28,7 @@ func TestSetAndGet(t *testing.T) {
 		t.Errorf("Value mismatch. Expected test, got %s\n", string(value))
 	}
 	t.Cleanup(func() {
-		removeKeyring()
+		RemoveKeyring()
 	})
 }
 
@@ -45,7 +45,7 @@ func TestGetKeys(t *testing.T) {
 		t.Error("Length mismatch")
 	}
 	t.Cleanup(func() {
-		removeKeyring()
+		RemoveKeyring()
 	})
 }
 
@@ -63,6 +63,6 @@ func TestRemove(t *testing.T) {
 		t.Errorf("Failed to remove, %s is present\n", string(value))
 	}
 	t.Cleanup(func() {
-		removeKeyring()
+		RemoveKeyring()
 	})
 }

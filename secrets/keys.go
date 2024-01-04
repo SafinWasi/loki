@@ -52,7 +52,7 @@ func RemoveKey(key string) error {
 	return kr.Remove(key)
 }
 
-func removeKeyring() error {
+func RemoveKeyring() error {
 	pwd, err := os.Getwd()
 	if err != nil {
 		return err

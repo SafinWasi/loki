@@ -19,12 +19,12 @@ import (
 var tp = ParseTemplates()
 var currentOP openid.Configuration
 
-//go:embed *.html
+//go:embed html/*.html
 //go:embed static/*
 var content embed.FS
 
 func ParseTemplates() *template.Template {
-	return template.Must(template.ParseFS(content, "*.html"))
+	return template.Must(template.ParseFS(content, "html/*.html"))
 }
 func Start(port int) {
 	mux := http.NewServeMux()
@@ -109,6 +109,7 @@ func registrationHandler() http.HandlerFunc {
 			r.ParseForm()
 			host := r.FormValue("host")
 			payload := r.FormValue("payload")
+			log.Println("Host and payload:", host, payload)
 			if payload == "" {
 				var test openid.RegistrationPayload
 				test.Ssa = r.FormValue("ssa")
