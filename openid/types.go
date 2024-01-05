@@ -23,11 +23,11 @@ type AccessToken struct {
 
 type RegistrationPayload struct {
 	Redirect_uris  []string `json:"redirect_uris"`
-	Scope          []string `json:"scope"`
-	Grant_types    []string `json:"grant_types"`
-	Response_types []string `json:"response_types"`
-	Client_name    string   `json:"client_name"`
-	Ssa            string   `json:"software_statement"`
-	Acr_values     []string `json:"acr_values"`
-	Lifetime       int      `json:"lifetime"`
+	Scope          []string `json:"scope,omitempty"`
+	Grant_types    []string `json:"grant_types,omitempty"`
+	Response_types []string `json:"response_types,omitempty"`
+	Client_name    string   `json:"client_name,omitempty"`
+	Ssa            string   `json:"software_statement,omitempty"`
+	Acr_values     []string `json:"acr_values,omitempty"`
+	Lifetime       int      `json:"lifetime,omitempty"`
 }

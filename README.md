@@ -1,5 +1,7 @@
 # Loki
 
+![Tests](https://github.com/SafinWasi/loki/actions/workflows/test.yaml/badge.svg) ![Builds](https://github.com/SafinWasi/loki/actions/workflows/build.yaml/badge.svg)
+
 A simple OpenID Connect Requesting Party (RP) to authenticate with an OpenID Provider, written fully in go.
 
 ```

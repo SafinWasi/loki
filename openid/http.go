@@ -1,6 +1,7 @@
 package openid
 
 import (
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -23,8 +24,9 @@ func Request(request *http.Request) ([]byte, error) {
 		return nil, err
 	}
 	log.Printf("Request to %v, status %v", request.URL, response.Status)
-	if response.StatusCode >= 400 {
-		log.Fatal("Error in request")
+	if response.StatusCode >= http.StatusBadRequest {
+		log.Println("Error in request")
+		return nil, errors.New(response.Status)
 	}
 	return response_bytes, err
 }

@@ -1,0 +1,21 @@
+{{define "registration"}}
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <script type="text/javascript" src="/static/htmx.min.js"></script>
+    <h1>Registration</h1>
+    <div>
+    <form hx-post="/registration">
+        <input type="text" placeholder="OpenID Provider" name="host" value=""><br>
+        <input type="text" placeholder="SSA" name="SSA" value=""><br>
+        <input type="text" placeholder="Client Name" name="client_name" value="loki_client"><br>
+        <input type="text" id="payload" placeholder="DCR Payload" name="payload" value=""><br>
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+    <a href="/">Home</a>
+</html>
+{{end}}

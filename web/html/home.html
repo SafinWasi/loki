@@ -1,0 +1,21 @@
+{{define "home"}}
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <script type="text/javascript" src="/static/htmx.min.js"></script>
+    <h1>Loki</h1>
+    <p> Currently configured OpenID providers:</p>
+    <ul>
+        {{range .}}
+        <li>{{.}} <a href="/client/{{.}}">[Details]</a> <a href="/delete/{{.}}">[Delete]</a> <a href="/code/{{.}}">[Code Flow]</a> </li>
+        {{end}}
+    </ul>
+    <a href="/registration">Registration</a><br>
+    <a href="/code">Code Flow</a><br>
+    <a href="/client-credentials">Client Credentials Flow</a><br>
+    <a href="/reset">Reset Loki</a><br>
+</html>
+{{end}}
