@@ -5,7 +5,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"testing"
 
 	"github.com/safinwasi/loki/secrets"
@@ -93,6 +96,8 @@ func TestRegistration(t *testing.T) {
 			w.Write(getDummyWellknown())
 		case "/register":
 			w.Write(getDummyClient())
+		case "/token":
+			w.Write(getDummyToken())
 		default:
 			http.NotFoundHandler().ServeHTTP(w, r)
 		}
@@ -113,17 +118,42 @@ func TestRegistration(t *testing.T) {
 	}
 }
 
-func TestGetAfterCreation(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
+func TestCodeFlow(t *testing.T) {
+	keys, err := secrets.GetKeys()
+	if err != nil {
+		t.Error(err)
+	}
+	key := keys[0]
+	req := httptest.NewRequest(http.MethodGet, "/code/"+key, nil)
 	w := httptest.NewRecorder()
-	homeHandler()(w, req)
+	codeFlow()(w, req)
 	res := w.Result()
-	if res.StatusCode != http.StatusOK {
-		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	if res.StatusCode != http.StatusFound {
+		t.Errorf("Expected %d, got %d", http.StatusFound, res.StatusCode)
 	}
 	t.Cleanup(func() {
 		secrets.RemoveKeyring()
 	})
+}
+
+func TestCallback(t *testing.T) {
+
+	req := httptest.NewRequest(http.MethodGet, "/callback?code=abcdef", nil)
+	w := httptest.NewRecorder()
+	callBackFunc()(w, req)
+	res := w.Result()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	}
+}
+
+func TestServer(t *testing.T) {
+	ch := make(chan os.Signal)
+	go func() {
+		Start(8080)
+		<-ch
+	}()
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 }
 
 func getDummyWellknown() []byte {

@@ -175,7 +175,6 @@ func codeFlow() http.HandlerFunc {
 		uri := CreateCodeUrl(config)
 		currentOP = config
 		uri = fmt.Sprintf("%s?%s", config.OpenID.Authorization_endpoint, uri)
-		log.Println(uri)
 		http.Redirect(w, r, uri, http.StatusFound)
 	}
 }
