@@ -1,4 +1,4 @@
-{{define "registration"}}
+{{define "add"}}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,11 +10,8 @@
     <link rel="stylesheet" href="/static/style.css">
     <h1>Registration</h1>
     <div>
-    <form hx-post="/registration">
+    <form hx-post="/add">
         <input type="text" placeholder="OpenID Provider" name="host" value=""><br>
-        <input type="text" placeholder="SSA" name="SSA" value=""><br>
-        <input type="text" placeholder="Client Name" name="client_name" value="loki_client"><br>
-        <input type="text" id="payload" placeholder="DCR Payload" name="payload" value=""><br>
         <input type="submit" value="Submit">
     </form>
     </div>

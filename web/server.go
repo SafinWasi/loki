@@ -28,13 +28,14 @@ func ParseTemplates() *template.Template {
 }
 func Start(port int) {
 	mux := http.NewServeMux()
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(content))))
+	mux.Handle("/static/", http.StripPrefix("/", http.FileServer(http.FS(content))))
 	mux.Handle("/", homeHandler())
 	mux.Handle("/registration", registrationHandler())
 	mux.Handle("/delete/", deleteHandler())
 	mux.Handle("/client/", clientHandler())
 	mux.Handle("/callback", callBackFunc())
 	mux.Handle("/code/", codeFlow())
+	mux.Handle("/add", addFunc())
 	fmt.Printf("Starting Loki on http://127.0.0.1:%d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), mux))
 }
@@ -68,7 +69,7 @@ func clientHandler() http.HandlerFunc {
 				return
 			}
 		}
-		err = tp.ExecuteTemplate(w, "client", string(val))
+		_, err = w.Write(val)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
@@ -79,6 +80,10 @@ func clientHandler() http.HandlerFunc {
 
 func deleteHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			http.Error(w, "Endpoint expects DELETE", http.StatusMethodNotAllowed)
+			return
+		}
 		id := strings.TrimPrefix(r.URL.Path, "/delete/")
 		_, err := secrets.Get(id)
 		if err != nil {
@@ -98,8 +103,7 @@ func deleteHandler() http.HandlerFunc {
 			return
 		}
 		log.Printf("Successfully removed %s\n", id)
-		w.WriteHeader(http.StatusNoContent)
-		http.Redirect(w, r, "/", http.StatusFound)
+		w.Write([]byte(""))
 	}
 }
 
@@ -191,5 +195,40 @@ func callBackFunc() http.HandlerFunc {
 			return
 		}
 		tp.ExecuteTemplate(w, "callback", token)
+	}
+}
+
+func addFunc() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Endpoint expects POST", http.StatusMethodNotAllowed)
+			return
+		}
+		var newClient openid.Configuration
+		r.ParseForm()
+		newClient.Client_id = r.FormValue("client_id")
+		newClient.Client_secret = r.FormValue("client_secret")
+		host := r.FormValue("hostname")
+		hostName, err := url.Parse(host)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+		oidc, err := openid.Fetch_openid(host)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+		newClient.OpenID = *oidc
+		clientBytes, err := json.MarshalIndent(newClient, "", "\t")
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+		secrets.Set(hostName.Host, clientBytes)
+		w.Write([]byte("<p>Successfully added</p>"))
 	}
 }

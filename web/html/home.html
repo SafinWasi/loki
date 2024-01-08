@@ -6,16 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <script type="text/javascript" src="/static/htmx.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/style.css">
     <h1>Loki</h1>
     <p> Currently configured OpenID providers:</p>
-    <ul>
-        {{range .}}
-        <li>{{.}} <a href="/client/{{.}}">[Details]</a> <a href="/delete/{{.}}">[Delete]</a> <a href="/code/{{.}}">[Code Flow]</a> </li>
-        {{end}}
-    </ul>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hostname</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+                <tr>
+                    <td>{{.}}</td>
+                    <td>
+                        <button type="button" class="button" hx-get="/client/{{.}}">
+                            Details
+                        </button>
+                        <button type="button" class="button" hx-delete="/delete/{{.}}" hx-confirm="Are you sure?" hx-swap="outerHTML" hx-target="closest tr">
+                            Delete
+                        </button>
+                        <a href="/code/{{.}}">
+                            Code Flow 
+                        </button>
+                    </td>
+                </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <form hx-post="/add">
+        <input type="text" placeholder="Client ID" name="client_id" value=""><br>
+        <input type="text" placeholder="Client Secret" name="client_secret" value=""><br>
+        <input type="text" placeholder="Hostname" name="hostname" value=""><br>
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
     <a href="/registration">Registration</a><br>
-    <a href="/code">Code Flow</a><br>
-    <a href="/client-credentials">Client Credentials Flow</a><br>
     <a href="/reset">Reset Loki</a><br>
 </html>
 {{end}}
