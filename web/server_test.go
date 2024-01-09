@@ -61,7 +61,7 @@ func TestFoundClient(t *testing.T) {
 
 func TestDeleteNotFound(t *testing.T) {
 	secrets.Initialize(false)
-	req := httptest.NewRequest(http.MethodGet, "/delete/test", nil)
+	req := httptest.NewRequest(http.MethodDelete, "/delete/test", nil)
 	w := httptest.NewRecorder()
 	deleteHandler()(w, req)
 	res := w.Result()
@@ -75,13 +75,13 @@ func TestDeleteNotFound(t *testing.T) {
 
 func TestDeleteFound(t *testing.T) {
 	secrets.Initialize(false)
-	req := httptest.NewRequest(http.MethodGet, "/delete/test", nil)
+	req := httptest.NewRequest(http.MethodDelete, "/delete/test", nil)
 	w := httptest.NewRecorder()
 	secrets.Set("test", []byte("test"))
 	deleteHandler()(w, req)
 	res := w.Result()
-	if res.StatusCode != http.StatusNoContent {
-		t.Errorf("Expected %d, got %d", http.StatusNoContent, res.StatusCode)
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
 	}
 	t.Cleanup(func() {
 		secrets.RemoveKeyring()

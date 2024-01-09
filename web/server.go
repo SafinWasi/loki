@@ -116,7 +116,10 @@ func registrationHandler() http.HandlerFunc {
 			log.Println("Host and payload:", host, payload)
 			if payload == "" {
 				var test openid.RegistrationPayload
-				test.Ssa = r.FormValue("ssa")
+				ssa := r.FormValue("ssa")
+				if len(ssa) > 0 {
+					test.Ssa = r.FormValue("ssa")
+				}
 				test.Grant_types = []string{"code", "client_credentials"}
 				test.Client_name = r.FormValue("client_name")
 				b, err := json.Marshal(test)
@@ -126,7 +129,7 @@ func registrationHandler() http.HandlerFunc {
 				}
 				payload = string(b)
 			}
-			newClient, err := openid.Register(host, "")
+			newClient, err := openid.Register(host, payload)
 			if err != nil {
 				log.Println(err)
 				http.Error(w, "Something went wrong", http.StatusInternalServerError)
