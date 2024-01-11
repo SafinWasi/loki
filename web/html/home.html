@@ -1,14 +1,16 @@
 {{define "home"}}
 <!DOCTYPE html>
 <html>
-    <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <script type="text/javascript" src="/static/htmx.min.js"></script>
-    <link rel="stylesheet" href="/static/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/style.css">
-    <div class="container">
+</head>
+<script type="text/javascript" src="/static/htmx.min.js"></script>
+<link rel="stylesheet" href="/static/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="/static/style.css">
+<div class="container">
     <h1>Loki</h1>
     <p> Currently configured OpenID providers:</p>
     <table class="table">
@@ -22,39 +24,43 @@
         </thead>
         <tbody>
             {{range .}}
-                <tr>
-                    <td>{{.}}</td>
-                    <td>
-                        <button type="button" class="button" hx-get="/client/{{.}}" hx-swap="outerHTML">
-                            Details
+            <tr>
+                <td>{{.}}</td>
+                <td>
+                    <button type="button" class="btn btn-secondary" hx-get="/client/{{.}}" hx-swap="outerHTML">
+                        Details
+                    </button>
+                    <button type="button" class="btn btn-danger" hx-delete="/delete/{{.}}" hx-confirm="Are you sure?"
+                        hx-swap="outerHTML" hx-target="closest tr">
+                        Delete
+                    </button>
+                    <a href="/code/{{.}}">
+                        Code Flow
                         </button>
-                        <button type="button" class="button" hx-delete="/delete/{{.}}" hx-confirm="Are you sure?" hx-swap="outerHTML" hx-target="closest tr">
-                            Delete
-                        </button>
-                        <a href="/code/{{.}}">
-                            Code Flow 
-                        </button>
-                    </td>
-                </tr>
+                </td>
+            </tr>
             {{end}}
         </tbody>
     </table>
+    <h3>Add a client</h3>
     <form hx-post="/add">
         <div class="form-group">
-            <input type="text" placeholder="Client ID" name="client_id" value=""><br>
+            <input type="text" class="form-control" placeholder="Client ID" name="client_id" value=""><br>
         </div>
         <div class="form-group">
-            <input type="text" placeholder="Client Secret" name="client_secret" value=""><br>
+            <input type="text" class="form-control" placeholder="Client Secret" name="client_secret" value=""><br>
         </div>
         <div class="form-group">
-            <input type="text" placeholder="Hostname" name="hostname" value=""><br>
+            <input type="text" class="form-control" placeholder="Hostname" name="hostname" value=""><br>
         </div>
         <div class="form-group">
-            <input type="submit" value="Submit" class="btn btn-primary">
+            <input type="submit" class="btn btn-primary" value="Submit" class="btn btn-primary"><br>
         </div>
     </form>
+    <br>
     <a href="/registration">Registration</a><br>
     <a href="/reset">Reset Loki</a><br>
-    </div>
+</div>
+
 </html>
 {{end}}

@@ -1,33 +1,60 @@
 {{define "registration"}}
 <!DOCTYPE html>
 <html>
-    <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <script type="text/javascript" src="/static/htmx.min.js"></script>
-    <link rel="stylesheet" href="/static/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/style.css">
-    <div class="container">
+</head>
+<script type="text/javascript" src="/static/htmx.min.js"></script>
+<link rel="stylesheet" href="/static/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="/static/style.css">
+<div class="container">
     <h1>Registration</h1>
     <form hx-post="/registration">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="OpenID Provider" name="host" value="">
+        <div class="row w-50 mb-3">
+            <div class="col">
+                <label for="host" class="form-label">OpenID Provider</label>
+                <input type="text" class="form-control" name="host" id="host" value="" required>
+            </div>
+            <div class="col">
+                <label for="client_name" class="form-label">Client Name</label>
+                <input type="text" class="form-control" placeholder="Client Name" name="client_name" id="client_name"
+                    value="loki_client">
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label for="ssa" class="form-label">SSA</label>
+            <input type="text" class="form-control" name="ssa" id="host" value="">
+        </div>
+        <div class="row w-50 mb-3">
+            <div class="col">
+                <label for="redirect_uris" class="form-label">Redirect URIs</label>
+                <input type="text" class="form-control" name="redirect_uris" id="redirect_uris"
+                    value="[http://127.0.0.1:3000/callback]">
+            </div>
+            <div class="col">
+                <label for="lifetime" class="form-label">Lifetime</label>
+                <input type="text" class="form-control" name="lifetime" id="lifetime" value="86400">
+            </div>
+        </div>
+        <label for="grantList" class="form-label">Grant Types</label>
+        <div class="form-check" id="grantList">
+            <input class="form-check-input" type="checkbox" name="code" id="codeCheck">
+            <label for="codeCheck" class="form-check-label">Code</label>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="client_credentials" id="clientCredentialsCheck">
+            <label for="clientCredentialsCheck" class="form-check-label">Client Credentials</label>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="SSA" name="SSA" value="">
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="Client Name" name="client_name" value="loki_client">
-        </div>
-        <div class="form-group">
-            <textarea type="text" class="form-control" placeholder="DCR Payload" name="payload" value=""></textarea>
-        </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Submit">
+            <input type="submit" class="btn btn-primary" value="Submit"><br>
         </div>
     </form>
+    <br>
     <a href="/">Home</a>
-    </div>
+</div>
+
 </html>
 {{end}}

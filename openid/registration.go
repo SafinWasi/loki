@@ -3,33 +3,16 @@ package openid
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
-	"time"
 )
 
-func Register(hostname string, payload string) (*Configuration, error) {
+func Register(hostname string, values RegistrationPayload) (*Configuration, error) {
 	log.Println("Starting client registration request")
 	_, err := url.Parse(hostname)
 	if err != nil {
 		return nil, err
-	}
-	var values = RegistrationPayload{}
-	if payload == "" {
-		values.Redirect_uris = []string{"http://localhost:3000/callback"}
-		values.Scope = []string{"openid", "profile"}
-		values.Grant_types = []string{"authorization_code", "client_credentials"}
-		values.Response_types = []string{"code", "token"}
-		values.Client_name = fmt.Sprintf("loki_client_%d", time.Now().Unix())
-		values.Lifetime = 86400
-	} else {
-		b := []byte(payload)
-		err = json.Unmarshal(b, &values)
-		if err != nil {
-			return nil, err
-		}
 	}
 	body_bytes, err := json.MarshalIndent(values, "", "\t")
 	if err != nil {

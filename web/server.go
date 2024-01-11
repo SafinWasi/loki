@@ -112,23 +112,8 @@ func registrationHandler() http.HandlerFunc {
 		if r.Method == http.MethodPost {
 			r.ParseForm()
 			host := r.FormValue("host")
-			payload := r.FormValue("payload")
-			log.Println("Host and payload:", host, payload)
-			if payload == "" {
-				var test openid.RegistrationPayload
-				ssa := r.FormValue("ssa")
-				if len(ssa) > 0 {
-					test.Ssa = r.FormValue("ssa")
-				}
-				test.Grant_types = []string{"code", "client_credentials"}
-				test.Client_name = r.FormValue("client_name")
-				b, err := json.Marshal(test)
-				if err != nil {
-					log.Println(err)
-					return
-				}
-				payload = string(b)
-			}
+			payload := createRegistrationPayload(r)
+			return
 			newClient, err := openid.Register(host, payload)
 			if err != nil {
 				log.Println(err)
@@ -234,4 +219,31 @@ func addFunc() http.HandlerFunc {
 		secrets.Set(hostName.Host, clientBytes)
 		w.Write([]byte("<p>Successfully added</p>"))
 	}
+}
+
+func createRegistrationPayload(r *http.Request) openid.RegistrationPayload {
+	var test openid.RegistrationPayload
+	clientName := r.FormValue("client_name")
+	if len(clientName) == 0 {
+		clientName = "loki_client"
+	}
+	ssa := r.FormValue("ssa")
+	if len(ssa) > 0 {
+		test.Ssa = r.FormValue("ssa")
+	}
+	code := r.FormValue("code")
+	client_creds := r.FormValue("client_credentials")
+	grantArray := make([]string, 0)
+	if code == "on" {
+		grantArray = append(grantArray, "code")
+	}
+	if client_creds == "on" {
+		grantArray = append(grantArray, "client_credentials")
+	}
+	test.Grant_types = grantArray
+	redirect_uri := r.FormValue("redirect_uris")
+	redirect_uri_array := make([]string, 1)
+	redirect_uri_array[1] = redirect_uri
+	test.Redirect_uris = redirect_uri_array
+	return test
 }
