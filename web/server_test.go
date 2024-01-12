@@ -105,7 +105,6 @@ func TestRegistration(t *testing.T) {
 	testHost = ts.URL
 	data := url.Values{}
 	data.Set("host", ts.URL)
-	data.Set("payload", "")
 	urlEncoded := data.Encode()
 	reader := strings.NewReader(urlEncoded)
 	req := httptest.NewRequest(http.MethodPost, "/delete/test", reader)

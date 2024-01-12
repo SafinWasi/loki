@@ -38,11 +38,10 @@ func TestRegistration(t *testing.T) {
 		}
 	}))
 	testHost = ts.URL
-	_, err := Register(ts.URL, "")
+	_, err := Register(testHost, getDummyPayload())
 	if err != nil {
 		t.Error(err)
 	}
-	_, err = Register(ts.URL, getDummyPayload())
 }
 
 func getDummyWellknown() []byte {
@@ -67,11 +66,11 @@ func getDummyClient() []byte {
 	return []byte(output)
 }
 
-func getDummyPayload() string {
+func getDummyPayload() []byte {
 	output := `
 	{
 		"redirect_uris": ["localhost:3000"]
 	}
 `
-	return output
+	return []byte(output)
 }

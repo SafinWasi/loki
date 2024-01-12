@@ -8,9 +8,14 @@ import (
 	"net/url"
 )
 
-func Register(hostname string, values RegistrationPayload) (*Configuration, error) {
+func Register(hostname string, payload []byte) (*Configuration, error) {
 	log.Println("Starting client registration request")
 	_, err := url.Parse(hostname)
+	if err != nil {
+		return nil, err
+	}
+	var values RegistrationPayload
+	err = json.Unmarshal(payload, &values)
 	if err != nil {
 		return nil, err
 	}

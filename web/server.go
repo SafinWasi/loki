@@ -112,8 +112,12 @@ func registrationHandler() http.HandlerFunc {
 		if r.Method == http.MethodPost {
 			r.ParseForm()
 			host := r.FormValue("host")
-			payload := createRegistrationPayload(r)
-			return
+			payload, err := createRegistrationPayload(r)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
 			newClient, err := openid.Register(host, payload)
 			if err != nil {
 				log.Println(err)
@@ -221,7 +225,7 @@ func addFunc() http.HandlerFunc {
 	}
 }
 
-func createRegistrationPayload(r *http.Request) openid.RegistrationPayload {
+func createRegistrationPayload(r *http.Request) ([]byte, error) {
 	var test openid.RegistrationPayload
 	clientName := r.FormValue("client_name")
 	if len(clientName) == 0 {
@@ -241,9 +245,10 @@ func createRegistrationPayload(r *http.Request) openid.RegistrationPayload {
 		grantArray = append(grantArray, "client_credentials")
 	}
 	test.Grant_types = grantArray
-	redirect_uri := r.FormValue("redirect_uris")
-	redirect_uri_array := make([]string, 1)
-	redirect_uri_array[1] = redirect_uri
+	redirect_uri := r.FormValue("redirect_uri")
+	redirect_uri_array := make([]string, 0)
+	redirect_uri_array = append(redirect_uri_array, redirect_uri)
 	test.Redirect_uris = redirect_uri_array
-	return test
+	result, err := json.Marshal(test)
+	return result, err
 }
