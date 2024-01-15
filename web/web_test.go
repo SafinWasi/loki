@@ -14,8 +14,8 @@ func TestCodeUrlCreation(t *testing.T) {
 		Client_id:     "test",
 		Client_secret: "test",
 	}
-	url := CreateCodeUrl(conf)
-	expected := "client_id=test&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&scope=openid"
+	url := CreateCodeUrl(conf, "{}", "")
+	expected := "client_id=test&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2Fcallback&response_type=code&scope=openid"
 	if url != expected {
 		t.Errorf("Expected %s, got %s", expected, url)
 	}

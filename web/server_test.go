@@ -127,12 +127,9 @@ func TestCodeFlow(t *testing.T) {
 	w := httptest.NewRecorder()
 	codeFlow()(w, req)
 	res := w.Result()
-	if res.StatusCode != http.StatusFound {
-		t.Errorf("Expected %d, got %d", http.StatusFound, res.StatusCode)
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
 	}
-	t.Cleanup(func() {
-		secrets.RemoveKeyring()
-	})
 }
 
 func TestCallback(t *testing.T) {
@@ -144,6 +141,9 @@ func TestCallback(t *testing.T) {
 	if res.StatusCode != http.StatusOK {
 		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
 	}
+	t.Cleanup(func() {
+		secrets.RemoveKeyring()
+	})
 }
 
 func TestServer(t *testing.T) {

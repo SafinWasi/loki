@@ -10,12 +10,23 @@ import (
 	"github.com/safinwasi/loki/openid"
 )
 
-func CreateCodeUrl(config openid.Configuration) string {
+func CreateCodeUrl(config openid.Configuration, params string, acr string) string {
 	data := url.Values{}
 	data.Set("response_type", "code")
 	data.Set("client_id", config.Client_id)
-	data.Set("redirect_uri", "http://localhost:3000/callback")
+	data.Set("redirect_uri", "http://127.0.0.1:3000/callback")
 	data.Set("scope", "openid")
+	var paramMap map[string]string
+	err := json.Unmarshal([]byte(params), &paramMap)
+	if err != nil {
+		return "Error unmarshaling JSON params. Please ensure valid JSON is provided."
+	}
+	for key, val := range paramMap {
+		data.Set(key, val)
+	}
+	if acr != "" {
+		data.Set("acr_values", acr)
+	}
 	uri := data.Encode()
 	return uri
 }

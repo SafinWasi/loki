@@ -168,10 +168,21 @@ func codeFlow() http.HandlerFunc {
 		}
 		var config openid.Configuration
 		json.Unmarshal(val, &config)
-		uri := CreateCodeUrl(config)
 		currentOP = config
-		uri = fmt.Sprintf("%s?%s", config.OpenID.Authorization_endpoint, uri)
-		http.Redirect(w, r, uri, http.StatusFound)
+		if r.Method == http.MethodPost {
+			r.ParseForm()
+			uri := CreateCodeUrl(config, r.FormValue("params"), r.FormValue("acr"))
+			uri = fmt.Sprintf("%s?%s", config.OpenID.Authorization_endpoint, uri)
+			w.Write([]byte(uri))
+		} else {
+			config.OpenID.Hostname = id
+			err := tp.ExecuteTemplate(w, "code", config)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+		}
 	}
 }
 
@@ -179,7 +190,6 @@ func callBackFunc() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params := r.URL.Query()
 		code := params.Get("code")
-		log.Println(code)
 		token, err := SendTokenRequest(code, currentOP.Client_id, currentOP.Client_secret, currentOP.OpenID.Token_endpoint, "authorization_code")
 		if err != nil {
 			log.Println(err)
