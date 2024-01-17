@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.5](https://github.com/SafinWasi/loki/compare/v0.1.4...v0.1.5) (2024-01-17)
+
+
+### Features
+
+* add code flow page ([6355996](https://github.com/SafinWasi/loki/commit/6355996d0cd25fef01ec779c00c659a28f1b1c99))
+* better form ([9a27c2d](https://github.com/SafinWasi/loki/commit/9a27c2d764e9f5b2d94eab3f0ecc5dd0ef2709d8))
+* better htmx ([935813c](https://github.com/SafinWasi/loki/commit/935813c6e2d54de426a9880bc9d29c8911dd9699))
+* more css ([3415531](https://github.com/SafinWasi/loki/commit/3415531e5c8a3148bb646245d354db5e8fe4e96e))
+
 ## [0.1.2](https://github.com/SafinWasi/loki/compare/v0.1.2...v0.1.2) (2023-09-05)
 
 
