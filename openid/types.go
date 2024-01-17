@@ -8,10 +8,11 @@ type Configuration struct {
 }
 
 type OIDCServer struct {
-	Hostname               string `json:"hostname"`
-	Authorization_endpoint string `json:"authorization_endpoint"`
-	Token_endpoint         string `json:"token_endpoint"`
-	Registration_endpoint  string `json:"registration_endpoint"`
+	Hostname               string   `json:"hostname"`
+	Authorization_endpoint string   `json:"authorization_endpoint"`
+	Token_endpoint         string   `json:"token_endpoint"`
+	Registration_endpoint  string   `json:"registration_endpoint"`
+	Acr_values_supported   []string `json:"acr_values_supported"`
 }
 
 type AccessToken struct {

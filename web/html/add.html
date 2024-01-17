@@ -1,0 +1,20 @@
+{{define "add"}}
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <script type="text/javascript" src="/static/htmx.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/style.css">
+    <h1>Registration</h1>
+    <div>
+    <form hx-post="/add">
+        <input type="text" placeholder="OpenID Provider" name="host" value=""><br>
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+    <a href="/">Home</a>
+</html>
+{{end}}

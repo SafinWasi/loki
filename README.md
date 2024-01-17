@@ -1,4 +1,4 @@
-# Loki
+# loki
 
 ![Tests](https://github.com/SafinWasi/loki/actions/workflows/test.yaml/badge.svg) ![Builds](https://github.com/SafinWasi/loki/actions/workflows/build.yaml/badge.svg)
 
@@ -6,22 +6,16 @@ A simple OpenID Connect Requesting Party (RP) to authenticate with an OpenID Pro
 
 ```
 Usage:
-  loki [command] [flags]
   loki [command]
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
-  delete      Deletes a configuration by alias
   help        Help about any command
-  list        List aliases configured
-  register    Registers a new OpenID Client
-  setup       Setup details for OIDC
+  run         Runs the Loki server
 
 Flags:
-  -a, --alias string   Flow to be used for authentication
-      --disable-ssl    Disables SSL
-  -f, --flow string    Flow to be used for authentication
-  -h, --help           help for loki
+      --debug   Debug mode
+  -h, --help    help for loki
 
 Use "loki [command] --help" for more information about a command.
 ```
