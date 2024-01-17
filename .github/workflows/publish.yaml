@@ -1,0 +1,49 @@
+name: Publish
+
+on:
+  push:
+    tags:
+    - 'v**'
+jobs:
+  publish_packages:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        platforms: ["windows", "linux"]
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895
+      with:
+        egress-policy: audit
+    - name: Checkout
+      uses: actions/checkout@v4 # v4.1.1
+      with:
+        fetch-depth: 0
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21.x'
+    - name: Get Dependencies
+      run: go get .
+    - name: Build
+      run: GOOS=${{ matrix.platforms }} GOARCH=amd64 go build -o loki-${{ matrix.platforms }}
+    - name: Get latest tag
+      id: latesttag
+      run: |
+        echo "version=$(echo ${{ github.event.ref }} | cut -d 'v' -f 2)" >> $GITHUB_OUTPUT
+        echo "tag=$(echo ${{ github.event.ref }} | cut -d '/' -f 3)" >> $GITHUB_OUTPUT
+    - name: Upload builds 
+      id: upload_binaries_setup
+      continue-on-error: true
+      uses: svenstaro/upload-release-action@1beeb572c19a9242f4361f4cee78f8e0d9aec5df # v2
+      with:
+        repo_token: ${{ secrets.CUSTOM_TOKEN }}
+        file: ./loki-${{ matrix.platforms }} 
+        asset_name: loki-${{ matrix.platforms }}
+        tag: ${{ steps.latesttag.outputs.tag }}
+    - name: Upload build
+      uses: actions/upload-artifact@v3
+      with:
+        name: loki-${{ matrix.platforms }}
+        path: ./loki-${{ matrix.platforms }}
