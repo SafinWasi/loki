@@ -1,4 +1,4 @@
-# Loki
+# loki
 
 ![Tests](https://github.com/SafinWasi/loki/actions/workflows/test.yaml/badge.svg) ![Builds](https://github.com/SafinWasi/loki/actions/workflows/build.yaml/badge.svg)
 
