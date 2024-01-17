@@ -6,7 +6,8 @@ on:
         description: 'Release version'
         required: true
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -16,8 +17,21 @@ jobs:
         uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895
         with:
           egress-policy: audit
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@01dd5d3ca463c7f10f7f4f7b4f177225ac661ee4 # v6.1.0
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: Configure Git
+        run: |
+          git config user.name "SafinWasi"
+          git config user.email "6601566+SafinWasi@users.noreply.github.com"
+          git config --global user.signingkey "${{ steps.import_gpg.outputs.keyid }}"
       - name: Release Please
-        uses: google-github-actions/release-please-action@v4
+        uses: google-github-actions/release-please-action@db8f2c60ee802b3748b512940dde88eabd7b7e01 #v3.7.13
         with:
           token: ${{ secrets.CUSTOM_TOKEN }}
           release-type: simple
