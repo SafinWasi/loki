@@ -37,7 +37,7 @@ jobs:
       - name: Release Please
         uses: google-github-actions/release-please-action@db8f2c60ee802b3748b512940dde88eabd7b7e01 #v3.7.13
         with:
-          token: ${{ secrets.CUSTOM_TOKEN }}
+          token: ${{ secrets.SW_AUTO_TOKEN }}
           release-type: simple
-          package-name: ${{ matrix.platforms }}
+          package-name: loki 
           release-as: ${{ github.event.inputs.release_version }}

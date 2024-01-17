@@ -38,7 +38,7 @@ jobs:
       continue-on-error: true
       uses: svenstaro/upload-release-action@1beeb572c19a9242f4361f4cee78f8e0d9aec5df # v2
       with:
-        repo_token: ${{ secrets.CUSTOM_TOKEN }}
+        repo_token: ${{ secrets.SW_AUTO_TOKEN }}
         file: ./loki-${{ matrix.platforms }} 
         asset_name: loki-${{ matrix.platforms }}
         tag: ${{ steps.latesttag.outputs.tag }}
