@@ -31,12 +31,11 @@ func CreateCodeUrl(config openid.Configuration, params string, acr string) strin
 	return uri
 }
 
-func SendTokenRequest(code string, client_id string, client_secret string, token_endpoint string, grant_type string) (string, error) {
+func SendTokenRequest(code string, client_id string, client_secret string, token_endpoint string, grant_type string, scope string) (string, error) {
 
 	data := url.Values{}
-	data.Set("scope", "openid")
+	data.Set("scope", scope)
 	data.Set("grant_type", grant_type)
-	data.Set("scope", "openid")
 	if grant_type == "authorization_code" {
 		data.Set("code", code)
 		data.Set("redirect_uri", "http://localhost:3000/callback")

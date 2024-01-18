@@ -147,7 +147,7 @@ func TestCallback(t *testing.T) {
 }
 
 func TestServer(t *testing.T) {
-	ch := make(chan os.Signal)
+	ch := make(chan os.Signal, 1)
 	go func() {
 		Start(8080)
 		<-ch
