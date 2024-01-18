@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -117,7 +118,24 @@ func TestRegistration(t *testing.T) {
 	}
 }
 
-func TestCodeFlow(t *testing.T) {
+func TestAddFunc(t *testing.T) {
+	data := url.Values{}
+	data.Set("client_id", "a")
+	data.Set("client_secret", "b")
+	data.Set("hostname", testHost)
+	urlEncoded := data.Encode()
+	reader := strings.NewReader(urlEncoded)
+	req := httptest.NewRequest(http.MethodPost, "/add", reader)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	addFunc()(w, req)
+	res := w.Result()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	}
+}
+
+func TestCodeGetFlow(t *testing.T) {
 	keys, err := secrets.GetKeys()
 	if err != nil {
 		t.Error(err)
@@ -132,6 +150,33 @@ func TestCodeFlow(t *testing.T) {
 	}
 }
 
+func TestCodePostFlow(t *testing.T) {
+	keys, err := secrets.GetKeys()
+	if err != nil {
+		t.Error(err)
+	}
+	key := keys[0]
+	data := url.Values{}
+	data.Set("params", "{}")
+	data.Set("acr", "")
+	encoded := data.Encode()
+	reader := strings.NewReader(encoded)
+	req := httptest.NewRequest(http.MethodPost, "/code/"+key, reader)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	codeFlow()(w, req)
+	res := w.Result()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	}
+	body, _ := io.ReadAll(res.Body)
+	body_string := string(body)
+	expected := fmt.Sprintf("Please click <a href=%s/authorize?client_id=a&redirect_uri=http%%3A%%2F%%2F127.0.0.1%%3A3000%%2Fcallback&response_type=code&scope=openid>here</a> to start flow", testHost)
+	if body_string != expected {
+		t.Errorf("Expected %s, got %s", expected, body_string)
+	}
+}
+
 func TestCallback(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodGet, "/callback?code=abcdef", nil)
@@ -140,6 +185,47 @@ func TestCallback(t *testing.T) {
 	res := w.Result()
 	if res.StatusCode != http.StatusOK {
 		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	}
+}
+
+func TestClientCredentialsGetFlow(t *testing.T) {
+	keys, err := secrets.GetKeys()
+	if err != nil {
+		t.Error(err)
+	}
+	key := keys[0]
+	req := httptest.NewRequest(http.MethodGet, "/creds/"+key, nil)
+	w := httptest.NewRecorder()
+	clientCredentialsFunc()(w, req)
+	res := w.Result()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	}
+}
+
+func TestClientCredentialsPostFlow(t *testing.T) {
+	keys, err := secrets.GetKeys()
+	if err != nil {
+		t.Error(err)
+	}
+	key := keys[0]
+	data := url.Values{}
+	data.Set("params", "{}")
+	encoded := data.Encode()
+	reader := strings.NewReader(encoded)
+	req := httptest.NewRequest(http.MethodPost, "/creds/"+key, reader)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	clientCredentialsFunc()(w, req)
+	res := w.Result()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected %d, got %d", http.StatusOK, res.StatusCode)
+	}
+	body, _ := io.ReadAll(res.Body)
+	body_string := string(body)
+	expected := "test"
+	if body_string != expected {
+		t.Errorf("Expected %s, got %s", expected, body_string)
 	}
 	t.Cleanup(func() {
 		secrets.RemoveKeyring()
