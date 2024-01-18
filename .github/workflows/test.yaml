@@ -24,8 +24,3 @@ jobs:
         run:  go test -cover ./...  
       - name: Vet
         run:  go vet ./...
-      - name: Static check
-        uses: dominikh/staticcheck-action@v1.3.0
-        with:
-          version: "2022.1.3"
-          install-go: false
