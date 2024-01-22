@@ -1,6 +1,6 @@
 # loki
 
-![Tests](https://github.com/SafinWasi/loki/actions/workflows/test.yaml/badge.svg) ![Builds](https://github.com/SafinWasi/loki/actions/workflows/build.yaml/badge.svg)
+![Tests](https://github.com/SafinWasi/loki/actions/workflows/test.yaml/badge.svg) ![Builds](https://github.com/SafinWasi/loki/actions/workflows/build.yaml/badge.svg) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 
 A simple OpenID Connect Requesting Party (RP) to authenticate with an OpenID Provider, written fully in go.
 

@@ -210,7 +210,7 @@ func TestClientCredentialsPostFlow(t *testing.T) {
 	}
 	key := keys[0]
 	data := url.Values{}
-	data.Set("params", "{}")
+	data.Set("scope", "openid")
 	encoded := data.Encode()
 	reader := strings.NewReader(encoded)
 	req := httptest.NewRequest(http.MethodPost, "/creds/"+key, reader)
