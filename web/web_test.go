@@ -30,7 +30,7 @@ func TestTokenRequest(t *testing.T) {
 			http.NotFoundHandler().ServeHTTP(w, r)
 		}
 	}))
-	token, err := SendTokenRequest("test", "test", "test", ts.URL+"/token", "code")
+	token, err := SendTokenRequest("test", "test", "test", ts.URL+"/token", "code", "openid")
 	if err != nil {
 		t.Error(err)
 	}

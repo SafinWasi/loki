@@ -1,6 +1,7 @@
 package secrets
 
 import (
+	"crypto/rand"
 	"errors"
 	"log"
 	"os"
@@ -19,15 +20,26 @@ func Initialize(debug bool) error {
 	}
 	credsDir := pwd + string(os.PathSeparator) + ".credentials"
 	_, err = os.ReadDir(credsDir)
+	var passPhrase []byte
 	if errors.Is(err, os.ErrNotExist) {
 		log.Println("Credentials directory does not exist. Creating...")
 		os.Mkdir(credsDir, os.ModePerm)
+		passPhrase, err = generateRandomPassphrase()
+		if err != nil {
+			return err
+		}
+	} else {
+		passPhraseFile := pwd + string(os.PathSeparator) + ".passphrase"
+		passPhrase, err = os.ReadFile(passPhraseFile)
+		if err != nil {
+			return err
+		}
 	}
 	kr, err = keyring.Open(
 		keyring.Config{
 			AllowedBackends:  []keyring.BackendType{keyring.FileBackend},
 			ServiceName:      "loki",
-			FilePasswordFunc: keyring.FixedStringPrompt("abdcef"),
+			FilePasswordFunc: keyring.FixedStringPrompt(string(passPhrase)),
 			FileDir:          credsDir})
 	return err
 }
@@ -80,4 +92,27 @@ func RemoveKeyring() error {
 	}
 	err = os.Remove(credsDir)
 	return err
+}
+
+func generateRandomPassphrase() ([]byte, error) {
+	log.Println("Generating random passphrase...")
+	pwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+	filePath := pwd + string(os.PathSeparator) + ".passphrase"
+	file, err := os.Create(filePath)
+	if err != nil {
+		return nil, err
+	}
+	b := make([]byte, 32)
+	_, err = rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
+	_, err = file.Write(b)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
 }

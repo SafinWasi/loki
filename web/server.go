@@ -35,6 +35,7 @@ func Start(port int) {
 	mux.Handle("/client/", clientHandler())
 	mux.Handle("/callback", callBackFunc())
 	mux.Handle("/code/", codeFlow())
+	mux.Handle("/creds/", clientCredentialsFunc())
 	mux.Handle("/add", addFunc())
 	fmt.Printf("Starting Loki on http://127.0.0.1:%d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), mux))
@@ -173,6 +174,7 @@ func codeFlow() http.HandlerFunc {
 			r.ParseForm()
 			uri := CreateCodeUrl(config, r.FormValue("params"), r.FormValue("acr"))
 			uri = fmt.Sprintf("%s?%s", config.OpenID.Authorization_endpoint, uri)
+			uri = fmt.Sprintf("Please click <a href=%s>here</a> to start flow", uri)
 			w.Write([]byte(uri))
 		} else {
 			config.OpenID.Hostname = id
@@ -190,13 +192,54 @@ func callBackFunc() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params := r.URL.Query()
 		code := params.Get("code")
-		token, err := SendTokenRequest(code, currentOP.Client_id, currentOP.Client_secret, currentOP.OpenID.Token_endpoint, "authorization_code")
+		token, err := SendTokenRequest(code, currentOP.Client_id, currentOP.Client_secret, currentOP.OpenID.Token_endpoint, "authorization_code", "openid")
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
 			return
 		}
 		tp.ExecuteTemplate(w, "callback", token)
+	}
+}
+
+func clientCredentialsFunc() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := strings.TrimPrefix(r.URL.Path, "/creds/")
+		if len(id) == 0 {
+			return
+		}
+		val, err := secrets.Get(id)
+		if err != nil {
+			log.Println(err)
+			if errors.Is(err, keyring.ErrKeyNotFound) {
+				http.Error(w, fmt.Sprintf("%s not found", id), http.StatusNotFound)
+				return
+			} else {
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+		}
+		var config openid.Configuration
+		json.Unmarshal(val, &config)
+		if r.Method == http.MethodPost {
+			r.ParseForm()
+			scope := r.FormValue("scope")
+			token, err := SendTokenRequest("", config.Client_id, config.Client_secret, config.OpenID.Token_endpoint, "client_credentials", scope)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+			w.Write([]byte(token))
+		} else {
+			config.OpenID.Hostname = id
+			err := tp.ExecuteTemplate(w, "creds", config)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, "Something went wrong", http.StatusInternalServerError)
+				return
+			}
+		}
 	}
 }
 

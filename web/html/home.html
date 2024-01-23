@@ -20,6 +20,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,13 +31,22 @@
                     <button type="button" class="btn btn-secondary" hx-get="/client/{{.}}" hx-swap="outerHTML">
                         Details
                     </button>
+                </td>
+                <td>
                     <button type="button" class="btn btn-danger" hx-delete="/delete/{{.}}" hx-confirm="Are you sure?"
                         hx-swap="outerHTML" hx-target="closest tr">
                         Delete
                     </button>
+                </td>
+                <td>
                     <a href="/code/{{.}}">
                         Code Flow
-                        </button>
+                    </a>
+                </td>
+                <td>
+                    <a href="/creds/{{.}}">
+                        Client Credentials Flow
+                    </a>
                 </td>
             </tr>
             {{end}}

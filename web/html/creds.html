@@ -1,0 +1,28 @@
+{{define "creds"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<script type="text/javascript" src="/static/htmx.min.js"></script>
+<link rel="stylesheet" href="/static/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link rel="stylesheet" href="/static/style.css">
+<div class="container">
+    <h1 class="my-3">Client Credentials Flow</h1>
+    <form hx-post="/creds/{{.OpenID.Hostname}}" class="mb-3">
+        <div class="form-group mb-3">
+            <label for="scope">Scope</label>
+            <input type="text" class="form-control" name="scope" id="scope" value="openid">
+        </div>
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    <a href="/">Home</a><br>
+</div>
+
+</html>
+{{end}}
