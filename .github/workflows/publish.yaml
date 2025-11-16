@@ -43,7 +43,7 @@ jobs:
         asset_name: loki-${{ matrix.platforms }}
         tag: ${{ steps.latesttag.outputs.tag }}
     - name: Upload build
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: loki-${{ matrix.platforms }}
         path: ./loki-${{ matrix.platforms }}
