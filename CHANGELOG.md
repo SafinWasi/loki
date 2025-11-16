@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6](https://github.com/SafinWasi/loki/compare/v0.1.5...v0.1.6) (2025-11-16)
+
+
+### Features
+
+* add client creds flow ([67d7283](https://github.com/SafinWasi/loki/commit/67d72839c4d2a903784995e6e3247fc68e0a6df1))
+* add random encryption passphrase ([ad761ef](https://github.com/SafinWasi/loki/commit/ad761efdae0c7d50b719313eef18f103af6337a1))
+
 ## [0.1.5](https://github.com/SafinWasi/loki/compare/v0.1.4...v0.1.5) (2024-01-17)
 
 
